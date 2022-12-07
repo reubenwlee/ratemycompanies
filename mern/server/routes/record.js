@@ -20,6 +20,16 @@ recordRoutes.route("/record").get(function (req, res) {
       res.json(result);
     });
 });
+
+// This section will help you get records matching company and city
+recordRoutes.route("/record/match").get(function (req, res) {
+  let db_connect = dbo.getDb("company_ratings");
+  let myquery = { "company": req.body.company, "city": req.body.city };
+  db_connect.collection("records").find(myquery).toArray(function (err, result) {
+      if (err) throw err;
+      res.json(result);
+    });
+});
  
 // This section will help you get a single record by id
 recordRoutes.route("/record/:id").get(function (req, res) {
