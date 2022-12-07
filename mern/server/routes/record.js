@@ -22,13 +22,18 @@ recordRoutes.route("/record").get(function (req, res) {
 });
 
 // This section will help you get records matching company and city
-recordRoutes.route("/record/match").get(function (req, res) {
+recordRoutes.route("/record/match/:company&:city").get(function (req, res) {
   let db_connect = dbo.getDb("company_ratings");
-  let myquery = { "company": req.body.company, "city": req.body.city };
+  console.log("INSIDE")
+  var com_pair = req.params.company.split('=');
+  var cit_pair = req.params.city.split('=');
+  let myquery = { "company": com_pair[1], "city": cit_pair[1]};
+  console.log(myquery)
   db_connect.collection("records").find(myquery).toArray(function (err, result) {
-      if (err) throw err;
-      res.json(result);
-    });
+    if (err) throw err;
+    res.json(result);
+    console.log(result)
+  });
 });
  
 // This section will help you get a single record by id

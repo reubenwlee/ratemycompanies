@@ -1,5 +1,5 @@
-import React, { useEffect,useState } from "react";
-import { useParams, useNavigate } from "react-router";
+import React, { useState } from "react";
+// import { useNavigate } from "react-router";
  
 const Record = (props) => (
   <tr>
@@ -15,50 +15,30 @@ const Record = (props) => (
   
 export default function Search() {
   const [records, setRecords] = useState([]);
-
   const [form, setForm] = useState({
     company: "",
     city: "",
   });
-  const params = useParams();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  // This method fetches the records from the database.
-  useEffect(() => {
-    getRecords();
-  }, [records.length]);
+  // This function will handle the submission.
+  async function onSubmit(e) {
+    e.preventDefault();
+    const searchInput = {
+      company: form.company,
+      city: form.city,
+    };
+    console.log(searchInput)
 
-  async function fetchData() {
-    const id = params.id.toString();
-    const response = await fetch(`http://localhost:5000/record/${params.id.toString()}`);
-
-    if (!response.ok) {
-      const message = `An error has occurred: ${response.statusText}`;
-      window.alert(message);
-      return;
-    }
-
-    const record = await response.json();
-    if (!record) {
-      window.alert(`Record with id ${id} not found`);
-      navigate("/");
-      return;
-    }
-
-    setForm(record);
-  }
-
-  async function getRecords() {
-    const response = await fetch(`http://localhost:5000/record/match`);
-
-    if (!response.ok) {
-      const message = `An error occurred: ${response.statusText}`;
-      window.alert(message);
-      return;
-    }
-
+    // This will send a post request to update the data in the database.
+    const response = await fetch(`http://localhost:5000/record/match/`+ new URLSearchParams({
+      company: form.company,
+      city: form.city,
+  }));
     const records = await response.json();
+    console.log(records)
     setRecords(records);
+    // navigate("/search");
   }
   
   // These methods will update the state properties.
@@ -66,13 +46,6 @@ export default function Search() {
     return setForm((prev) => {
       return { ...prev, ...value };
     });
-  }
-
-  // This function will handle the submission.
-  async function onSubmit(e) {
-    e.preventDefault();
-    fetchData();
-    getRecords();
   }
 
   // This method will delete a record

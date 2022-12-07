@@ -52,6 +52,7 @@ export default function Edit() {
   }
   
   async function onSubmit(e) {
+    console.log('TRIGGER')
     e.preventDefault();
     const editedPerson = {
       company: form.company,
