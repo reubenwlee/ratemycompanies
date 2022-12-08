@@ -17,3 +17,6 @@ app.listen(port, () => {
   });
   console.log(`Server is running on port: ${port}`);
 });
+
+// Confirming Successful Heroku Deployment
+app.get('/', (req, res) => { res.send('Hello from Express!')})
